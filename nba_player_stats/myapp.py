@@ -14,10 +14,12 @@ This app performs simple webscraping of NBA player stats data!
 """)
 
 st.sidebar.header('User Input Features')
+# st.sidebar.selectbox(Name, list) for a dropdown menu
 selected_year = st.sidebar.selectbox('Year', list(reversed(range(1950, 2020))))
 
 # Web scraping of NBA player stats
 @st.cache
+# @st.cache for caching data
 def load_data(year):
     url = 'https://www.basketball-reference.com/leagues/NBA_' + str(year) + '_per_game.html'
     html = pd.read_html(url, header=0)
@@ -30,6 +32,7 @@ playerstats = load_data(selected_year)
 
 # Sidebar - Team selection
 sorted_unique_team = sorted(playerstats.Tm.unique())
+# st.sidebar.multiselect(Name, list to choose, default values)
 selected_team = st.sidebar.multiselect('Team', sorted_unique_team, sorted_unique_team)
 
 # Sidebar - Position selection
@@ -50,9 +53,10 @@ def filedownload(df):
     href = f'<a href="data:file/csv;base64,{b64}" download="playerstats.csv">Download CSV File</a>'
     return href
 
+# create a download link button
 st.markdown(filedownload(df_selected_team), unsafe_allow_html=True)
 
-# Heatmap
+# Heatmap show if clicked
 if st.button('Intercorrelation Heatmap'):
     st.header('Intercorrelation Matrix Heatmap')
     df_selected_team.to_csv('output.csv', index=False)
